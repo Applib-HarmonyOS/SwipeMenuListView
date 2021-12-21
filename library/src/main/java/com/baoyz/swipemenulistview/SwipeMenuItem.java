@@ -1,8 +1,9 @@
 package com.baoyz.swipemenulistview;
 
-
-import android.content.Context;
-import android.graphics.drawable.Drawable;
+import ohos.agp.components.element.Element;
+import ohos.agp.components.element.ElementScatter;
+import ohos.agp.utils.Color;
+import ohos.app.Context;
 
 /**
  * 
@@ -14,10 +15,13 @@ public class SwipeMenuItem {
 
 	private int id;
 	private Context mContext;
+	private String menuTitle;
 	private String title;
-	private Drawable icon;
-	private Drawable background;
-	private int titleColor;
+	private int icon1 = 0;
+	private int icon2 = 0;
+	private Element background1;
+	private Element background2;
+	private Color titleColor;
 	private int titleSize;
 	private int width;
 
@@ -33,7 +37,7 @@ public class SwipeMenuItem {
 		this.id = id;
 	}
 
-	public int getTitleColor() {
+	public Color getTitleColor() {
 		return titleColor;
 	}
 
@@ -45,7 +49,7 @@ public class SwipeMenuItem {
 		this.titleSize = titleSize;
 	}
 
-	public void setTitleColor(int titleColor) {
+	public void setTitleColor(Color titleColor) {
 		this.titleColor = titleColor;
 	}
 
@@ -61,28 +65,35 @@ public class SwipeMenuItem {
 		setTitle(mContext.getString(resId));
 	}
 
-	public Drawable getIcon() {
-		return icon;
+	public int getIcon1() {
+		return icon1;
 	}
 
-	public void setIcon(Drawable icon) {
-		this.icon = icon;
+	public void setIcon1(int resId) {
+		this.icon1 = resId;
 	}
 
-	public void setIcon(int resId) {
-		this.icon = mContext.getResources().getDrawable(resId);
+	public int getIcon2() {
+		return icon2;
 	}
 
-	public Drawable getBackground() {
-		return background;
+	public void setIcon2(int resId) {
+		this.icon2 = resId;
 	}
 
-	public void setBackground(Drawable background) {
-		this.background = background;
+	public Element getBackground1() {
+		return background1;
+	}
+	public Element getBackground2() {
+		return background2;
 	}
 
-	public void setBackground(int resId) {
-		this.background = mContext.getResources().getDrawable(resId);
+	public void setBackground1(Element background1) {
+		this.background1 = background1;
+	}
+
+	public void setBackground2(Element background2) {
+		this.background2 = background2;
 	}
 
 	public int getWidth() {
@@ -92,5 +103,14 @@ public class SwipeMenuItem {
 	public void setWidth(int width) {
 		this.width = width;
 	}
+
+	public String getMenuTitle() {
+		return menuTitle;
+	}
+
+	public void setMenuTitle(String menuTitle) {
+		this.menuTitle = menuTitle;
+	}
+
 
 }

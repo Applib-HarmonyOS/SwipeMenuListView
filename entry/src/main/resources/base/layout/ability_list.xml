@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:orientation="vertical">
+
+    <com.baoyz.swipemenulistview.SwipeMenuListView
+        ohos:id="$+id:list_container"
+        ohos:width="match_parent"
+        ohos:height="match_content"/>
+
+</DirectionalLayout>
