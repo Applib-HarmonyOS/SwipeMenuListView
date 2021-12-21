@@ -24,6 +24,8 @@ public class SimpleAbilitySlice extends AbilitySlice implements Component.Scroll
 
     private SwipeMenu menu = new SwipeMenu(getContext());
 
+    private String APPLICATION = "Application ";
+
 
 
     @Override
@@ -56,7 +58,7 @@ public class SimpleAbilitySlice extends AbilitySlice implements Component.Scroll
             openItem.setBackground1(openItemShapeElement);
             openItem.setMenuTitle("open");
             openItem.setWidth(250);
-            openItem.setTitle("Application "+ i);
+            openItem.setTitle(APPLICATION + i);
             openItem.setTitleSize(60);
             openItem.setIcon2(ResourceTable.Media_ic_delete);
             openItem.setTitleColor(Color.BLACK);

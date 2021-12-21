@@ -19,8 +19,8 @@ public class SwipeMenuLayout extends ComponentContainer implements Component.Tou
 
     private final String TAG = SwipeMenuLayout.class.getSimpleName();
 
-    private static SwipeMenuLayout mViewCache;
-    private static State mStateCache;
+    private SwipeMenuLayout mViewCache;
+    private State mStateCache;
 
     private final int XY_ARRAY_LENGTH = 2;
     private final int Y_INDEX = 1;
@@ -151,94 +151,73 @@ public class SwipeMenuLayout extends ComponentContainer implements Component.Tou
         }
 
         if (mStateCache == State.LEFTOPEN && mCanLeftSwipe) {
-            if (mLeftView != null)
-            mLeftView.setComponentPosition(0, 0, mLeftViewLen, 0);
+            if (mLeftView != null) {
+                mLeftView.setComponentPosition(0, 0, mLeftViewLen, 0);
+            }
             mContentView.setComponentPosition(mLeftViewLen, 0,
                     mContentViewLen + mLeftViewLen, 0);
-            if (mRightView != null)
-            mRightView.setComponentPosition(mContentViewLen + mLeftViewLen, 0,
-                    mContentViewLen + mLeftViewLen + mRightViewLen, 0);
+            if (mRightView != null) {
+                mRightView.setComponentPosition(mContentViewLen + mLeftViewLen, 0,
+                        mContentViewLen + mLeftViewLen + mRightViewLen, 0);
+            }
         } else if (mStateCache == State.RIGHTOPEN && mCanRightSwipe) {
-            if (mLeftView != null)
-            mLeftView.setComponentPosition(
-                -mLeftViewLen - (mContentViewLen - mRightViewLen), 0, 0, 0);
+            if (mLeftView != null) {
+                mLeftView.setComponentPosition(
+                        -mLeftViewLen - (mContentViewLen - mRightViewLen), 0, 0, 0);
+            }
             mContentView.setComponentPosition(-mRightViewLen, 0,
                     mContentViewLen - mRightViewLen, 0);
-            if (mRightView != null)
-            mRightView.setComponentPosition(mContentViewLen - mRightViewLen, 0, mContentViewLen, 0);
+            if (mRightView != null) {
+                mRightView.setComponentPosition(mContentViewLen - mRightViewLen, 0, mContentViewLen, 0);
+            }
         }
     }
 
     private void setComponentIds(int count) {
         for (int i = 0; i < count; i++) {
             Component child = getComponentAt(i);
-            if (mLeftView == null && child.getId() == mLeftViewResID) {
-                mLeftView = child;
-                mLeftView.setClickable(true);
-                mLeftView.getComponentPosition();
-            } else if (mRightView == null && child.getId() == mRightViewResID) {
-                mRightView = child;
-                mRightView.setClickable(true);
-            } else if (mContentView == null && child.getId() == mContentViewResID) {
-                mContentView = child;
-                mContentView.setClickable(true);
-            }
+            settingComponentsId(child);
         }
         if(mContentViewLenPre > 0) {
-            if (mContentView != null)
-            mContentViewLen = mContentViewLenPre;
+            if (mContentView != null) {
+                mContentViewLen = mContentViewLenPre;
+            }
         } else {
-            if (mContentView != null)
-            mContentViewLen = mContentView.getWidth();
+            if (mContentView != null) {
+                mContentViewLen = mContentView.getWidth();
+            }
         }
-        if (mLeftView != null)
+        if (mLeftView != null) {
             mLeftViewLen = mLeftView.getWidth();
-        if (mRightView != null)
+        }
+        if (mRightView != null) {
             mRightViewLen = mRightView.getWidth();
+        }
+    }
+
+    private void settingComponentsId(Component child) {
+        if (mLeftView == null && child.getId() == mLeftViewResID) {
+            mLeftView = child;
+            mLeftView.setClickable(true);
+            mLeftView.getComponentPosition();
+        } else if (mRightView == null && child.getId() == mRightViewResID) {
+            mRightView = child;
+            mRightView.setClickable(true);
+        } else if (mContentView == null && child.getId() == mContentViewResID) {
+            mContentView = child;
+            mContentView.setClickable(true);
+        }
     }
 
     @Override
     public boolean onTouchEvent(Component component, TouchEvent touchEvent) {
         switch (touchEvent.getAction()) {
             case TouchEvent.PRIMARY_POINT_DOWN: {
-                isSwipeing = false;
-                if (mLastP == null) {
-                    mLastP = new PointF();
-                }
-
-                mLastP.set(getTouchX(touchEvent, 0), getTouchY(touchEvent, 0));
-                if (mFirstP == null) {
-                    mFirstP = new PointF();
-                }
-                mFirstP.set(getTouchX(touchEvent, 0), getTouchY(touchEvent, 0));
-                if (mViewCache != null) {
-                    if (mViewCache != this) {
-                        mViewCache.handlerSwipeMenu(CLOSE);
-                    }
-                }
+                touchDown(touchEvent);
                 break;
             }
             case TouchEvent.POINT_MOVE: {
-                float distanceX = mLastP.x - getTouchX(touchEvent, 0);
-                float distanceY = mLastP.y - getTouchY(touchEvent, 0);
-                if (Math.abs(distanceY) > mScaledTouchSlop && Math.abs(distanceY) > Math.abs(distanceX)) {
-                    break;
-                }
-
-                scrollTo((int) (distanceX), 0);
-
-              if (getScrollValue(Component.HORIZONTAL) > 0) {
-                    if (mRightView == null) {
-                        scrollTo(0, 0);
-                    } else {
-                        if (getScrollValue(Component.HORIZONTAL)
-                            > mRightView.getRight() - mContentView.getRight() - mContentViewLp.getMarginRight()) {
-                            scrollTo(mRightView.getRight() - mContentView.getRight() - mContentViewLp.getMarginRight(),
-                                0);
-                        }
-                    }
-                }
-                mLastP.set(getTouchX(touchEvent, 0), getTouchY(touchEvent, 0));
+                touchUp(touchEvent);
 
                 break;
             }
@@ -260,6 +239,47 @@ public class SwipeMenuLayout extends ComponentContainer implements Component.Tou
 
         onInterceptTouchEvent(touchEvent);
         return true;
+    }
+
+    private void touchDown(TouchEvent touchEvent){
+        isSwipeing = false;
+        if (mLastP == null) {
+            mLastP = new PointF();
+        }
+
+        mLastP.set(getTouchX(touchEvent, 0), getTouchY(touchEvent, 0));
+        if (mFirstP == null) {
+            mFirstP = new PointF();
+        }
+        mFirstP.set(getTouchX(touchEvent, 0), getTouchY(touchEvent, 0));
+        if (mViewCache != null) {
+            if (mViewCache != this) {
+                mViewCache.handlerSwipeMenu(CLOSE);
+            }
+        }
+    }
+
+    private void touchUp(TouchEvent touchEvent){
+        float distanceX = mLastP.x - getTouchX(touchEvent, 0);
+        float distanceY = mLastP.y - getTouchY(touchEvent, 0);
+        if (Math.abs(distanceY) > mScaledTouchSlop && Math.abs(distanceY) > Math.abs(distanceX)) {
+            return;
+        }
+
+        scrollTo((int) (distanceX), 0);
+
+        if (getScrollValue(Component.HORIZONTAL) > 0) {
+            if (mRightView == null) {
+                scrollTo(0, 0);
+            } else {
+                if (getScrollValue(Component.HORIZONTAL)
+                        > mRightView.getRight() - mContentView.getRight() - mContentViewLp.getMarginRight()) {
+                    scrollTo(mRightView.getRight() - mContentView.getRight() - mContentViewLp.getMarginRight(),
+                            0);
+                }
+            }
+        }
+        mLastP.set(getTouchX(touchEvent, 0), getTouchY(touchEvent, 0));
     }
 
     public boolean onInterceptTouchEvent(TouchEvent event) {
@@ -315,24 +335,34 @@ public class SwipeMenuLayout extends ComponentContainer implements Component.Tou
             return mStateCache;
         }
         if (finalyDistanceX < 0) {
-            if (getScrollValue(AXIS_X) < 0 && mLeftView != null) {
-                if (Math.abs(mLeftView.getWidth() * mFraction) < Math.abs(getScrollValue(AXIS_X))) {
-                    return State.LEFTOPEN;
-                }
-            }
-
-            if (getScrollValue(AXIS_X) > 0 && mRightView != null) {
-                return CLOSE;
-            }
+            finalYDistanceXLessZero();
         } else if (finalyDistanceX > 0) {
-            if (mRightView != null) {
-                if (Math.abs(mRightView.getWidth() * mFraction) - finalyDistanceX < Math.abs(getScrollValue(AXIS_X))) {
-                    return State.RIGHTOPEN;
-                }
+            finalYDistanceXGreaterZero();
+        }
+        return CLOSE;
+    }
+
+    private State finalYDistanceXLessZero(){
+        if (getScrollValue(AXIS_X) < 0 && mLeftView != null) {
+            if (Math.abs(mLeftView.getWidth() * mFraction) < Math.abs(getScrollValue(AXIS_X))) {
+                return State.LEFTOPEN;
             }
-            if (getScrollValue(AXIS_X) < 0 && mLeftView != null) {
-                return CLOSE;
+        }
+
+        if (getScrollValue(AXIS_X) > 0 && mRightView != null) {
+            return CLOSE;
+        }
+        return CLOSE;
+    }
+
+    private State finalYDistanceXGreaterZero(){
+        if (mRightView != null) {
+            if (Math.abs(mRightView.getWidth() * mFraction) - finalyDistanceX < Math.abs(getScrollValue(AXIS_X))) {
+                return State.RIGHTOPEN;
             }
+        }
+        if (getScrollValue(AXIS_X) < 0 && mLeftView != null) {
+            return CLOSE;
         }
         return CLOSE;
     }
@@ -386,11 +416,11 @@ public class SwipeMenuLayout extends ComponentContainer implements Component.Tou
         this.mCanRightSwipe = mCanRightSwipe;
     }
 
-    public static SwipeMenuLayout getViewCache() {
+    public SwipeMenuLayout getViewCache() {
         return mViewCache;
     }
 
-    public static State getStateCache() {
+    public State getStateCache() {
         return mStateCache;
     }
 

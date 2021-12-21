@@ -47,19 +47,16 @@ public class SwipeMenuListView extends ListContainer implements Component.TouchE
     public SwipeMenuListView(Context context) {
         super(context);
         mContext = context;
-        init();
     }
 
     public SwipeMenuListView(Context context, AttrSet attrs, int defStyle) {
         super(context, attrs, "");
         mContext = context;
-        init();
     }
 
     public SwipeMenuListView(Context context, AttrSet attrs) {
         super(context, attrs);
         mContext = context;
-        init();
     }
 
 
@@ -88,9 +85,6 @@ public class SwipeMenuListView extends ListContainer implements Component.TouchE
         menu.addMenuItem(item);
 
 
-    }
-
-    public void init(){
     }
 
     public void setMenuCreator(SwipeMenuCreator menuCreator) {

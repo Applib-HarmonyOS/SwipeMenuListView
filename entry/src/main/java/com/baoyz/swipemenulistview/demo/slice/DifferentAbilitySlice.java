@@ -24,6 +24,8 @@ public class DifferentAbilitySlice extends AbilitySlice implements Component.Scr
 
     private SwipeMenu menu = new SwipeMenu(getContext());
 
+    private String APPLICATION = "Application ";
+
 
 
     @Override
@@ -61,7 +63,7 @@ public class DifferentAbilitySlice extends AbilitySlice implements Component.Scr
             item1.setBackground2(item1ShapeElement2);
             item1.setMenuTitle("open");
             item1.setWidth(300);
-            item1.setTitle("Application "+ i);
+            item1.setTitle(APPLICATION+ i);
             item1.setTitleSize(60);
             item1.setIcon1(ResourceTable.Media_ic_action_favorite);
             item1.setIcon2(ResourceTable.Media_ic_action_good);
@@ -82,7 +84,7 @@ public class DifferentAbilitySlice extends AbilitySlice implements Component.Scr
             item2.setBackground2(item2ShapeElement2);
             item2.setMenuTitle("open");
             item2.setWidth(250);
-            item2.setTitle("Application "+ i);
+            item2.setTitle(APPLICATION+ i);
             item2.setTitleSize(60);
             item2.setIcon1(ResourceTable.Media_ic_action_important);
             item2.setIcon2(ResourceTable.Media_ic_action_discard);
@@ -102,7 +104,7 @@ public class DifferentAbilitySlice extends AbilitySlice implements Component.Scr
             item3.setBackground2(item3ShapeElement2);
             item3.setMenuTitle("open");
             item3.setWidth(300);
-            item3.setTitle("Application "+ i);
+            item3.setTitle(APPLICATION+ i);
             item3.setTitleSize(60);
             item3.setIcon1(ResourceTable.Media_ic_action_about);
             item3.setIcon2(ResourceTable.Media_ic_action_share);
