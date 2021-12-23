@@ -19,8 +19,9 @@ public class SwipeMenuLayout extends ComponentContainer implements Component.Tou
 
     private final String TAG = SwipeMenuLayout.class.getSimpleName();
 
-    private static SwipeMenuLayout mViewCache;
-    private static State mStateCache;
+    private SwipeMenuLayout mViewCache;
+    private static SwipeMenuLayout viewCache;
+    private State mStateCache;
 
     private final int XY_ARRAY_LENGTH = 2;
     private final int Y_INDEX = 1;
@@ -252,9 +253,9 @@ public class SwipeMenuLayout extends ComponentContainer implements Component.Tou
             mFirstP = new PointF();
         }
         mFirstP.set(getTouchX(touchEvent, 0), getTouchY(touchEvent, 0));
-        if (mViewCache != null) {
-            if (mViewCache != this) {
-                mViewCache.handlerSwipeMenu(CLOSE);
+        if (viewCache != null) {
+            if (viewCache != this) {
+                viewCache.handlerSwipeMenu(CLOSE);
             }
         }
     }
@@ -317,6 +318,7 @@ public class SwipeMenuLayout extends ComponentContainer implements Component.Tou
             mStateCache = result;
         } else if (result == State.RIGHTOPEN) {
             mViewCache = this;
+            updateCache(mViewCache);
             mScroller.startScroll(getScrollValue(AXIS_X), 0,
                 mRightView.getRight() - mContentView.getRight() - mContentViewLp.getMarginRight() - getScrollValue(
                     AXIS_X), 0);
@@ -329,6 +331,11 @@ public class SwipeMenuLayout extends ComponentContainer implements Component.Tou
         }
         invalidate();
     }
+
+    private static void updateCache(SwipeMenuLayout mViewCache){
+        viewCache = mViewCache;
+    }
+
 
     private State isShouldOpen() {
         if (!(mScaledTouchSlop < Math.abs(finalyDistanceX))) {
@@ -421,11 +428,11 @@ public class SwipeMenuLayout extends ComponentContainer implements Component.Tou
         this.mCanRightSwipe = mCanRightSwipe;
     }
 
-    public static SwipeMenuLayout getViewCache() {
+  /*  public SwipeMenuLayout getViewCache() {
         return mViewCache;
-    }
+    }*/
 
-    public static State getStateCache() {
+    public State getStateCache() {
         return mStateCache;
     }
 
