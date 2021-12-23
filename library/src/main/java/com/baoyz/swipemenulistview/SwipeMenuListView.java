@@ -17,31 +17,6 @@ import java.util.List;
  * @date 2014-8-18
  */
 public class SwipeMenuListView extends ListContainer implements Component.TouchEventListener {
-
-    private static final int TOUCH_STATE_NONE = 0;
-    private static final int TOUCH_STATE_X = 1;
-    private static final int TOUCH_STATE_Y = 2;
-
-    public static final int DIRECTION_LEFT = 1;
-    public static final int DIRECTION_RIGHT = -1;
-    private int mDirection = 1;//swipe from right to left by default
-
-    private int MAX_Y = 5;
-    private int MAX_X = 3;
-    private float mDownX;
-    private float mDownY;
-    private int mTouchState;
-    private int mTouchPosition;
-    private Context mContext;
-    private SwipeMenuLayout mTouchView;
-    private OnSwipeListener mOnSwipeListener;
-
-    private SwipeMenuCreator mMenuCreator;
-    private OnMenuItemClickListener mOnMenuItemClickListener;
-    private OnMenuStateChangeListener mOnMenuStateChangeListener;
-    private Animator.CurveType mCloseInterpolator;
-    private Animator.CurveType mOpenInterpolator;
-    private List<String> itemsList;
     SwipeMenu menu;
 
     public SwipeMenuListView(Context context) {
@@ -87,26 +62,9 @@ public class SwipeMenuListView extends ListContainer implements Component.TouchE
 
     }
 
-    public void setMenuCreator(SwipeMenuCreator menuCreator) {
-        this.mMenuCreator = menuCreator;
-    }
-
     @Override
     public boolean onTouchEvent(Component component, TouchEvent touchEvent) {
         return false;
-    }
-
-    public void setOnMenuItemClickListener(
-            OnMenuItemClickListener onMenuItemClickListener) {
-        this.mOnMenuItemClickListener = onMenuItemClickListener;
-    }
-
-    public void setOnSwipeListener(OnSwipeListener onSwipeListener) {
-        this.mOnSwipeListener = onSwipeListener;
-    }
-
-    public void setOnMenuStateChangeListener(OnMenuStateChangeListener onMenuStateChangeListener) {
-        mOnMenuStateChangeListener = onMenuStateChangeListener;
     }
 
     public static interface OnMenuItemClickListener {
@@ -123,10 +81,6 @@ public class SwipeMenuListView extends ListContainer implements Component.TouchE
         void onMenuOpen(int position);
 
         void onMenuClose(int position);
-    }
-
-    public void setSwipeDirection(int direction) {
-        mDirection = direction;
     }
 
     /**

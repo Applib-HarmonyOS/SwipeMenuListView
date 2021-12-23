@@ -16,6 +16,9 @@ package utils;
 import ohos.agp.components.AttrSet;
 
 public class AttrUtils {
+    private AttrUtils() {
+    }
+
     // Get int value from Attributes
     public static Integer getIntFromAttr(AttrSet attrs, String name, Integer defaultValue) {
         Integer value = defaultValue;
