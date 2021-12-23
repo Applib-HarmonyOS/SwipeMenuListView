@@ -11,7 +11,7 @@ This library has been inspired by [baoyongzhang//SwipeMenuListView](https://gith
 
 
 ## Usage
-<image src = "/screenshot/swipemenu.gif" width = 320 height = 400/>
+<image src = "/screenshot/swipemenu.gif" width = 320 height = 600/>
 
 The usage is pretty straightforward. Add the tag into the XML layout:
 ```xml
