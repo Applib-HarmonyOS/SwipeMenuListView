@@ -1,6 +1,5 @@
 apply plugin: 'com.huawei.ohos.hap'
 apply plugin: 'com.huawei.ohos.decctest'
-apply plugin: 'com.huawei.agconnect'
 //For instructions on signature configuration, see https://developer.harmonyos.com/en/docs/documentation/doc-guides/ide_debug_device-0000001053822404#EN-US_TOPIC_0000001154985555__section1112183053510
 ohos {
     compileSdkVersion 6
@@ -22,7 +21,6 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.har'])
     testImplementation 'junit:junit:4.13'
     ohosTestImplementation 'com.huawei.ohos.testkit:runner:1.0.0.100'
-    implementation 'com.huawei.agconnect:agconnect-core-harmony:1.0.0.300'
     implementation project(path: ':library')
 }
 decc {
