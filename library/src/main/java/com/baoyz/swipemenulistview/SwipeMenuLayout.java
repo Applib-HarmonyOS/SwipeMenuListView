@@ -19,8 +19,8 @@ public class SwipeMenuLayout extends ComponentContainer implements Component.Tou
 
     private final String TAG = SwipeMenuLayout.class.getSimpleName();
 
-    private SwipeMenuLayout mViewCache;
-    private State mStateCache;
+    private static SwipeMenuLayout mViewCache;
+    private static State mStateCache;
 
     private final int XY_ARRAY_LENGTH = 2;
     private final int Y_INDEX = 1;
@@ -334,10 +334,15 @@ public class SwipeMenuLayout extends ComponentContainer implements Component.Tou
         if (!(mScaledTouchSlop < Math.abs(finalyDistanceX))) {
             return mStateCache;
         }
-        if (finalyDistanceX < 0) {
-            finalYDistanceXLessZero();
-        } else if (finalyDistanceX > 0) {
-            finalYDistanceXGreaterZero();
+        if (finalyDistanceX > 0) {
+            if (mRightView != null) {
+                if (Math.abs(mRightView.getWidth() * mFraction) - finalyDistanceX < Math.abs(getScrollValue(AXIS_X))) {
+                    return State.RIGHTOPEN;
+                }
+            }
+            if (getScrollValue(AXIS_X) < 0 && mLeftView != null) {
+                return CLOSE;
+            }
         }
         return CLOSE;
     }
@@ -416,11 +421,11 @@ public class SwipeMenuLayout extends ComponentContainer implements Component.Tou
         this.mCanRightSwipe = mCanRightSwipe;
     }
 
-    public SwipeMenuLayout getViewCache() {
+    public static SwipeMenuLayout getViewCache() {
         return mViewCache;
     }
 
-    public State getStateCache() {
+    public static State getStateCache() {
         return mStateCache;
     }
 
