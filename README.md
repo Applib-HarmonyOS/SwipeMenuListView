@@ -44,6 +44,9 @@ The usage is pretty straightforward. Add the tag into the XML layout:
     listContainer.setItemProvider(swipeItemProvider);
                       
 ```
+
+Note: left swipe not supported
+
 ## Installation instructions:
 
 ```
