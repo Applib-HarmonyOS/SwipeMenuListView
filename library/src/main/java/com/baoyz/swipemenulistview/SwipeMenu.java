@@ -1,6 +1,6 @@
 package com.baoyz.swipemenulistview;
 
-import android.content.Context;
+import ohos.app.Context;
 
 import java.util.ArrayList;
 import java.util.List;

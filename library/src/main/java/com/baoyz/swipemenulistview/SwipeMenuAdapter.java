@@ -1,14 +1,13 @@
 package com.baoyz.swipemenulistview;
 
-import android.content.Context;
-import android.database.DataSetObserver;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListAdapter;
-import android.widget.WrapperListAdapter;
-import com.baoyz.swipemenulistview.SwipeMenuView.OnSwipeItemClickListener;
+import ohos.agp.colors.RgbColor;
+import ohos.agp.components.*;
+import ohos.agp.components.element.ShapeElement;
+import ohos.agp.utils.TextAlignment;
+import ohos.agp.window.dialog.ToastDialog;
+import ohos.app.Context;
+
+import java.util.List;
 
 /**
  * 
@@ -16,134 +15,120 @@ import com.baoyz.swipemenulistview.SwipeMenuView.OnSwipeItemClickListener;
  * @date 2014-8-24
  * 
  */
-public class SwipeMenuAdapter implements WrapperListAdapter,
-		OnSwipeItemClickListener {
+public class SwipeMenuAdapter extends BaseItemProvider  {
 
-    private ListAdapter mAdapter;
     private Context mContext;
-    private SwipeMenuListView.OnMenuItemClickListener onMenuItemClickListener;
+    private SwipeMenu mSwipeMenu;
+    private List<SwipeMenuItem> mSwipeMenuItems;
+    private SwipeMenuLayout swipeMenuLayout;
+    private final int TOAST_DURATION = 1000;
 
-    public SwipeMenuAdapter(Context context, ListAdapter adapter) {
-        mAdapter = adapter;
+    public SwipeMenuAdapter(Context context, SwipeMenu menu) {
         mContext = context;
+        mSwipeMenu = menu;
+        mSwipeMenuItems = menu.getMenuItems();
     }
+
 
     @Override
     public int getCount() {
-        return mAdapter.getCount();
+        return mSwipeMenuItems.size();
     }
 
     @Override
-    public Object getItem(int position) {
-        return mAdapter.getItem(position);
+    public Object getItem(int i) {
+        return mSwipeMenuItems.get(i);
     }
 
     @Override
-    public long getItemId(int position) {
-        return mAdapter.getItemId(position);
+    public long getItemId(int i) {
+        return mSwipeMenuItems.get(i).getId();
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        SwipeMenuLayout layout = null;
-        if (convertView == null) {
-            View contentView = mAdapter.getView(position, convertView, parent);
-            SwipeMenu menu = new SwipeMenu(mContext);
-            menu.setViewType(getItemViewType(position));
-            createMenu(menu);
-            SwipeMenuView menuView = new SwipeMenuView(menu,
-                    (SwipeMenuListView) parent);
-            menuView.setOnSwipeItemClickListener(this);
-            SwipeMenuListView listView = (SwipeMenuListView) parent;
-            layout = new SwipeMenuLayout(contentView, menuView,
-                    listView.getCloseInterpolator(),
-                    listView.getOpenInterpolator());
-            layout.setPosition(position);
-        } else {
-            layout = (SwipeMenuLayout) convertView;
-            layout.closeMenu();
-            layout.setPosition(position);
-            View view = mAdapter.getView(position, layout.getContentView(),
-                    parent);
+    public Component getComponent(int i, Component component, ComponentContainer componentContainer) {
+        Component container = LayoutScatter.getInstance(mContext).parse(ResourceTable.Layout_list_item,
+                null, false);
+
+        Text contentText = (Text) container.findComponentById(ResourceTable.Id_contentText);
+        contentText.setText(mSwipeMenuItems.get(i).getTitle());
+        contentText.setTextSize(mSwipeMenuItems.get(i).getTitleSize());
+        contentText.setTextColor(mSwipeMenuItems.get(i).getTitleColor());
+
+        SwipeMenuLayout easySwipeMenuLayout = (SwipeMenuLayout) container.findComponentById(
+                ResourceTable.Id_es);
+        swipeMenuLayout = easySwipeMenuLayout;
+
+        DirectionalLayout contentD = (DirectionalLayout) container.findComponentById(ResourceTable.Id_content);
+        Text rightFirstText = (Text) container.findComponentById(ResourceTable.Id_right_menu);
+        rightFirstText.setTextAlignment(TextAlignment.CENTER);
+        rightFirstText.setText(mSwipeMenuItems.get(i).getMenuTitle());
+        if (mSwipeMenuItems.get(i).getBackground1() != null) {
+            rightFirstText.setBackground(mSwipeMenuItems.get(i).getBackground1());
         }
-        if (mAdapter instanceof BaseSwipListAdapter) {
-            boolean swipEnable = (((BaseSwipListAdapter) mAdapter).getSwipEnableByPosition(position));
-            layout.setSwipEnable(swipEnable);
+        rightFirstText.setWidth(mSwipeMenuItems.get(i).getWidth());
+
+        Image rightFirstImage = (Image) container.findComponentById(ResourceTable.Id_right_menu_image);
+        if (mSwipeMenuItems.get(i).getIcon1() != 0){
+            rightFirstImage.setVisibility(Component.VISIBLE);
+            rightFirstText.setVisibility(Component.HIDE);
+            rightFirstImage.setBackground(mSwipeMenuItems.get(i).getBackground1());
+            rightFirstImage.setImageAndDecodeBounds(mSwipeMenuItems.get(i).getIcon1());
+            rightFirstImage.setWidth(mSwipeMenuItems.get(i).getWidth());
         }
-        return layout;
+
+
+        Image rightSecondText = (Image) container.findComponentById(ResourceTable.Id_right_menu_2);
+        if (mSwipeMenuItems.get(i).getBackground2() != null) {
+            rightSecondText.setBackground(mSwipeMenuItems.get(i).getBackground2());
+        }
+        rightSecondText.setImageAndDecodeBounds(mSwipeMenuItems.get(i).getIcon2());
+        rightSecondText.setWidth(mSwipeMenuItems.get(i).getWidth());
+
+        contentD.setClickedListener(
+                componentClick -> swipeClicked(contentText.getText(), i, easySwipeMenuLayout));
+        rightFirstText.setClickedListener(componentRight -> swipeClicked("Right first", i,
+                easySwipeMenuLayout));
+        rightSecondText.setClickedListener(componentRight2 -> swipeClicked("Right second", i,
+                easySwipeMenuLayout));
+
+        return container;
+    }
+
+    private void swipeClicked(String content, int position, SwipeMenuLayout easySwipeMenuLayout) {
+        ToastDialog toast = new ToastDialog(mContext);
+        toast.setText(position + " click " + content);
+        toast.setDuration(TOAST_DURATION);
+        toast.show();
+
+        easySwipeMenuLayout.resetStatus();
+    }
+    public void reset(){
+        if(swipeMenuLayout != null) {
+            swipeMenuLayout.resetStatus();
+        }
     }
 
     public void createMenu(SwipeMenu menu) {
+
         // Test Code
         SwipeMenuItem item = new SwipeMenuItem(mContext);
         item.setTitle("Item 1");
-        item.setBackground(new ColorDrawable(Color.GRAY));
+        ShapeElement shapeElement = new ShapeElement();
+        shapeElement.setRgbColor(new RgbColor(128,128,128));
+        item.setBackground1(shapeElement);
         item.setWidth(300);
         menu.addMenuItem(item);
 
         item = new SwipeMenuItem(mContext);
         item.setTitle("Item 2");
-        item.setBackground(new ColorDrawable(Color.RED));
+        ShapeElement shapeElementRed = new ShapeElement();
+        shapeElementRed.setRgbColor(new RgbColor(255,0,0));
+        item.setBackground1(shapeElementRed);
         item.setWidth(300);
         menu.addMenuItem(item);
-    }
 
-    @Override
-    public void onItemClick(SwipeMenuView view, SwipeMenu menu, int index) {
-        if (onMenuItemClickListener != null) {
-            onMenuItemClickListener.onMenuItemClick(view.getPosition(), menu,
-                    index);
-        }
+        mSwipeMenu = menu;
+        mSwipeMenuItems = menu.getMenuItems();
     }
-
-    public void setOnSwipeItemClickListener(
-            SwipeMenuListView.OnMenuItemClickListener onMenuItemClickListener) {
-        this.onMenuItemClickListener = onMenuItemClickListener;
-    }
-
-    @Override
-    public void registerDataSetObserver(DataSetObserver observer) {
-        mAdapter.registerDataSetObserver(observer);
-    }
-
-    @Override
-    public void unregisterDataSetObserver(DataSetObserver observer) {
-        mAdapter.unregisterDataSetObserver(observer);
-    }
-
-    @Override
-    public boolean areAllItemsEnabled() {
-        return mAdapter.areAllItemsEnabled();
-    }
-
-    @Override
-    public boolean isEnabled(int position) {
-        return mAdapter.isEnabled(position);
-    }
-
-    @Override
-    public boolean hasStableIds() {
-        return mAdapter.hasStableIds();
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return mAdapter.getItemViewType(position);
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        return mAdapter.getViewTypeCount();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return mAdapter.isEmpty();
-    }
-
-    @Override
-    public ListAdapter getWrappedAdapter() {
-        return mAdapter;
-    }
-
 }

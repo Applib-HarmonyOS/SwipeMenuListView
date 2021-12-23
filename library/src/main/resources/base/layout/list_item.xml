@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (c) 2020 Huawei Device Co., Ltd.
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+     http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -->
+<com.baoyz.swipemenulistview.SwipeMenuLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    xmlns:app="http://schemas.huawei.com/res/ohos/app"
+    ohos:id="$+id:es"
+    ohos:width="match_parent"
+    ohos:height="match_content"
+    ohos:background_element="#00ffff"
+    app:contentView="$+id:content"
+    app:leftMenuView="$+id:left"
+    app:rightMenuView="$+id:right"
+    app:canLeftSwipe="true"
+    app:canRightSwipe="true">
+
+    <DirectionalLayout
+        ohos:id="$+id:left"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:background_element="#0099cc"
+        ohos:orientation="horizontal"
+        ohos:padding="20vp">
+
+        <Text
+            ohos:id="$+id:left_menu"
+            ohos:width="match_content"
+            ohos:height="match_content"
+            ohos:clickable="true"
+            ohos:text_size="20vp"
+            ohos:text="left" />
+
+    </DirectionalLayout>
+
+    <DirectionalLayout
+        ohos:id="$+id:content"
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:background_element="#FFFFFF"
+        ohos:orientation="vertical"
+        ohos:padding="20vp">
+
+        <Text
+            ohos:id="$+id:contentText"
+            ohos:width="match_content"
+            ohos:height="match_content"
+            ohos:text_size="20vp"
+            ohos:text="content" />
+
+    </DirectionalLayout>
+
+    <DirectionalLayout
+        ohos:id="$+id:right"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:orientation="horizontal">
+
+        <Text
+            ohos:id="$+id:right_menu"
+            ohos:width="match_content"
+            ohos:height="200"
+            ohos:background_element="#00ddff"
+            ohos:clickable="true"
+            ohos:padding="20vp"
+            ohos:text_size="20vp"
+            ohos:text="right1" />
+
+        <Image
+            ohos:id="$+id:right_menu_image"
+            ohos:width="match_content"
+            ohos:height="200"
+            ohos:background_element="#00ddff"
+            ohos:clickable="true"
+            ohos:padding="20vp"
+            ohos:text_size="20vp"
+            ohos:text="right1"
+            ohos:visibility="hide"/>
+
+        <Image
+            ohos:id="$+id:right_menu_2"
+            ohos:width="match_content"
+            ohos:height="200"
+            ohos:background_element="#ff8800"
+            ohos:clickable="true"
+            ohos:padding="20vp"
+            ohos:text_size="20vp"
+            ohos:image_src="$media:ic_delete"
+            ohos:text="right2" />
+
+    </DirectionalLayout>
+</com.baoyz.swipemenulistview.SwipeMenuLayout>
