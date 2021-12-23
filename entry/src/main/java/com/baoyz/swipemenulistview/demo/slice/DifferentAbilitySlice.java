@@ -12,21 +12,13 @@ import ohos.agp.utils.Color;
 import java.util.ArrayList;
 
 public class DifferentAbilitySlice extends AbilitySlice implements Component.ScrolledListener {
-    private final int LIST_ITEM_COUNT = 20;
-
     private SwipeMenuListView listContainer;
 
     private SwipeMenuAdapter swipeItemProvider;
 
-    private ArrayList<String> contentList;
-
-    private SwipeMenuLayout mainSwipeMenuLayout;
-
     private SwipeMenu menu = new SwipeMenu(getContext());
 
     private String APPLICATION = "Application ";
-
-
 
     @Override
     public void onStart(Intent intent) {
@@ -70,7 +62,6 @@ public class DifferentAbilitySlice extends AbilitySlice implements Component.Scr
             item1.setTitleColor(Color.BLACK);
             menu.addMenuItem(item1);
 
-            i++;
 
             SwipeMenuItem item2 = new SwipeMenuItem(
                     getApplicationContext());
@@ -90,7 +81,6 @@ public class DifferentAbilitySlice extends AbilitySlice implements Component.Scr
             item2.setIcon2(ResourceTable.Media_ic_action_discard);
             item2.setTitleColor(Color.BLACK);
             menu.addMenuItem(item2);
-            i++;
 
             SwipeMenuItem item3 = new SwipeMenuItem(
                     getApplicationContext());

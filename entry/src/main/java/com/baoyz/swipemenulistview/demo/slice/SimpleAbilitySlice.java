@@ -12,15 +12,9 @@ import ohos.agp.utils.Color;
 import java.util.ArrayList;
 
 public class SimpleAbilitySlice extends AbilitySlice implements Component.ScrolledListener {
-    private final int LIST_ITEM_COUNT = 20;
-
     private SwipeMenuListView listContainer;
 
     private SwipeMenuAdapter swipeItemProvider;
-
-    private ArrayList<String> contentList;
-
-    private SwipeMenuLayout mainSwipeMenuLayout;
 
     private SwipeMenu menu = new SwipeMenu(getContext());
 

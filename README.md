@@ -11,6 +11,7 @@ This library has been inspired by [baoyongzhang//SwipeMenuListView](https://gith
 
 
 ## Usage
+<image src = "/screenshot/swipemenu.gif" width = 320 height = 600/>
 
 The usage is pretty straightforward. Add the tag into the XML layout:
 ```xml
@@ -43,6 +44,9 @@ The usage is pretty straightforward. Add the tag into the XML layout:
     listContainer.setItemProvider(swipeItemProvider);
                       
 ```
+
+Note: left swipe not supported
+
 ## Installation instructions:
 
 ```

@@ -16,16 +16,13 @@ import java.util.List;
  * 
  */
 public class SwipeMenuAdapter extends BaseItemProvider  {
-
     private Context mContext;
-    private SwipeMenu mSwipeMenu;
     private List<SwipeMenuItem> mSwipeMenuItems;
     private SwipeMenuLayout swipeMenuLayout;
     private final int TOAST_DURATION = 1000;
 
     public SwipeMenuAdapter(Context context, SwipeMenu menu) {
         mContext = context;
-        mSwipeMenu = menu;
         mSwipeMenuItems = menu.getMenuItems();
     }
 
@@ -107,28 +104,5 @@ public class SwipeMenuAdapter extends BaseItemProvider  {
         if(swipeMenuLayout != null) {
             swipeMenuLayout.resetStatus();
         }
-    }
-
-    public void createMenu(SwipeMenu menu) {
-
-        // Test Code
-        SwipeMenuItem item = new SwipeMenuItem(mContext);
-        item.setTitle("Item 1");
-        ShapeElement shapeElement = new ShapeElement();
-        shapeElement.setRgbColor(new RgbColor(128,128,128));
-        item.setBackground1(shapeElement);
-        item.setWidth(300);
-        menu.addMenuItem(item);
-
-        item = new SwipeMenuItem(mContext);
-        item.setTitle("Item 2");
-        ShapeElement shapeElementRed = new ShapeElement();
-        shapeElementRed.setRgbColor(new RgbColor(255,0,0));
-        item.setBackground1(shapeElementRed);
-        item.setWidth(300);
-        menu.addMenuItem(item);
-
-        mSwipeMenu = menu;
-        mSwipeMenuItems = menu.getMenuItems();
     }
 }

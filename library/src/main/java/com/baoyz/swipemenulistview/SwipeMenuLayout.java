@@ -16,10 +16,8 @@ import static utils.State.CLOSE;
 
 public class SwipeMenuLayout extends ComponentContainer implements Component.TouchEventListener,
         Component.BindStateChangedListener, Component.DrawTask, ComponentContainer.ArrangeListener, Component.ScrolledListener {
-
-    private final String TAG = SwipeMenuLayout.class.getSimpleName();
-
     private SwipeMenuLayout mViewCache;
+    private static SwipeMenuLayout viewCache;
     private State mStateCache;
 
     private final int XY_ARRAY_LENGTH = 2;
@@ -42,7 +40,6 @@ public class SwipeMenuLayout extends ComponentContainer implements Component.Tou
     private PointF mLastP;
     private PointF mFirstP;
     private ScrollHelper mScroller;
-    private float distanceX;
     private float finalyDistanceX;
 
     private int mLeftViewLen;
@@ -121,18 +118,16 @@ public class SwipeMenuLayout extends ComponentContainer implements Component.Tou
 
         mContentViewLp = mContentView.getLayoutConfig();
 
-        //布局contentView
         int cRight;
-        if (mContentView != null) {
-            mContentViewLp = (LayoutConfig) mContentView.getLayoutConfig();
-            int cTop = top + mContentViewLp.getMarginTop();
-            int cLeft = left + mContentViewLp.getMarginLeft();
-            cRight = left + mContentViewLp.getMarginLeft() + mContentViewLen;
-            int cBottom = cTop + mContentView.getHeight();
-            mContentView.setComponentPosition(cLeft, cTop, cRight, cBottom);
+        mContentViewLp = (LayoutConfig) mContentView.getLayoutConfig();
+        int cTop = top + mContentViewLp.getMarginTop();
+        int cLeft = left + mContentViewLp.getMarginLeft();
+        cRight = left + mContentViewLp.getMarginLeft() + mContentViewLen;
+        int cBottom = cTop + mContentView.getHeight();
+        mContentView.setComponentPosition(cLeft, cTop, cRight, cBottom);
 
-            mContentViewLenPre = mContentView.getWidth();
-        }
+        mContentViewLenPre = mContentView.getWidth();
+
         if (mLeftView != null) {
             LayoutConfig leftViewLp = (LayoutConfig) mLeftView.getLayoutConfig();
             int lTop = top + leftViewLp.getMarginTop();
@@ -178,7 +173,7 @@ public class SwipeMenuLayout extends ComponentContainer implements Component.Tou
             Component child = getComponentAt(i);
             settingComponentsId(child);
         }
-        if(mContentViewLenPre > 0) {
+        if (mContentViewLenPre > 0) {
             if (mContentView != null) {
                 mContentViewLen = mContentViewLenPre;
             }
@@ -241,7 +236,7 @@ public class SwipeMenuLayout extends ComponentContainer implements Component.Tou
         return true;
     }
 
-    private void touchDown(TouchEvent touchEvent){
+    private void touchDown(TouchEvent touchEvent) {
         isSwipeing = false;
         if (mLastP == null) {
             mLastP = new PointF();
@@ -252,21 +247,19 @@ public class SwipeMenuLayout extends ComponentContainer implements Component.Tou
             mFirstP = new PointF();
         }
         mFirstP.set(getTouchX(touchEvent, 0), getTouchY(touchEvent, 0));
-        if (mViewCache != null) {
-            if (mViewCache != this) {
-                mViewCache.handlerSwipeMenu(CLOSE);
-            }
+        if (viewCache != null && viewCache != this) {
+            viewCache.handlerSwipeMenu(CLOSE);
         }
     }
 
-    private void touchUp(TouchEvent touchEvent){
-        float distanceX = mLastP.x - getTouchX(touchEvent, 0);
-        float distanceY = mLastP.y - getTouchY(touchEvent, 0);
-        if (Math.abs(distanceY) > mScaledTouchSlop && Math.abs(distanceY) > Math.abs(distanceX)) {
+    private void touchUp(TouchEvent touchEvent) {
+        float distX = mLastP.x - getTouchX(touchEvent, 0);
+        float distY = mLastP.y - getTouchY(touchEvent, 0);
+        if (Math.abs(distY) > mScaledTouchSlop && Math.abs(distY) > Math.abs(distX)) {
             return;
         }
 
-        scrollTo((int) (distanceX), 0);
+        scrollTo((int) (distX), 0);
 
         if (getScrollValue(Component.HORIZONTAL) > 0) {
             if (mRightView == null) {
@@ -317,9 +310,10 @@ public class SwipeMenuLayout extends ComponentContainer implements Component.Tou
             mStateCache = result;
         } else if (result == State.RIGHTOPEN) {
             mViewCache = this;
+            updateCache(this);
             mScroller.startScroll(getScrollValue(AXIS_X), 0,
-                mRightView.getRight() - mContentView.getRight() - mContentViewLp.getMarginRight() - getScrollValue(
-                    AXIS_X), 0);
+                    mRightView.getRight() - mContentView.getRight() - mContentViewLp.getMarginRight() - getScrollValue(
+                            AXIS_X), 0);
             mStateCache = result;
         } else {
             mScroller.startScroll(getScrollValue(AXIS_X), 0, -getScrollValue(AXIS_X), 0);
@@ -330,37 +324,20 @@ public class SwipeMenuLayout extends ComponentContainer implements Component.Tou
         invalidate();
     }
 
+    private static void updateCache(SwipeMenuLayout viewCacheParam) {
+        viewCache = viewCacheParam;
+    }
+
+
     private State isShouldOpen() {
         if (!(mScaledTouchSlop < Math.abs(finalyDistanceX))) {
             return mStateCache;
         }
-        if (finalyDistanceX < 0) {
-            finalYDistanceXLessZero();
-        } else if (finalyDistanceX > 0) {
-            finalYDistanceXGreaterZero();
-        }
-        return CLOSE;
-    }
-
-    private State finalYDistanceXLessZero(){
-        if (getScrollValue(AXIS_X) < 0 && mLeftView != null) {
-            if (Math.abs(mLeftView.getWidth() * mFraction) < Math.abs(getScrollValue(AXIS_X))) {
-                return State.LEFTOPEN;
-            }
+        if (finalyDistanceX > 0 && mRightView != null && Math.abs(mRightView.getWidth() * mFraction)
+                - finalyDistanceX < Math.abs(getScrollValue(AXIS_X))) {
+            return State.RIGHTOPEN;
         }
 
-        if (getScrollValue(AXIS_X) > 0 && mRightView != null) {
-            return CLOSE;
-        }
-        return CLOSE;
-    }
-
-    private State finalYDistanceXGreaterZero(){
-        if (mRightView != null) {
-            if (Math.abs(mRightView.getWidth() * mFraction) - finalyDistanceX < Math.abs(getScrollValue(AXIS_X))) {
-                return State.RIGHTOPEN;
-            }
-        }
         if (getScrollValue(AXIS_X) < 0 && mLeftView != null) {
             return CLOSE;
         }
@@ -382,13 +359,12 @@ public class SwipeMenuLayout extends ComponentContainer implements Component.Tou
     }
 
     public void resetStatus() {
-        if (mViewCache != null) {
-            if (mStateCache != null && mStateCache != CLOSE && mScroller != null) {
-                mScroller.startScroll(mViewCache.getScrollValue(AXIS_X), 0, -mViewCache.getScrollValue(AXIS_X), 0);
-                mViewCache.invalidate();
-                mViewCache = null;
-                mStateCache = null;
-            }
+        if (mViewCache != null && mStateCache != null
+                && mStateCache != CLOSE && mScroller != null) {
+            mScroller.startScroll(mViewCache.getScrollValue(AXIS_X), 0, -mViewCache.getScrollValue(AXIS_X), 0);
+            mViewCache.invalidate();
+            mViewCache = null;
+            mStateCache = null;
         }
     }
 
@@ -416,20 +392,8 @@ public class SwipeMenuLayout extends ComponentContainer implements Component.Tou
         this.mCanRightSwipe = mCanRightSwipe;
     }
 
-    public SwipeMenuLayout getViewCache() {
-        return mViewCache;
-    }
-
     public State getStateCache() {
         return mStateCache;
-    }
-
-    private boolean isLeftToRight() {
-        if (distanceX < 0) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     private float getTouchX(TouchEvent touchEvent, int index) {
